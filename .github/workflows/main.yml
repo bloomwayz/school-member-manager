@@ -1,0 +1,52 @@
+name: Build App
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.9.*'
+      - name: Build (macOS)
+        run: |
+          qmake CONFIG+=release
+          make -j$(sysctl -n hw.logicalcpu)
+      - name: Deploy (.app bundle)
+        run: |
+          macdeployqt MemberManager.app
+          ditto -c -k --sequesterRsrc --keepParent YourApp.app artifacts/MemberManager-macOS.zip
+      - uses: actions/upload-artifact@v3
+        with:
+          name: MemberManager-macOS
+          path: artifacts/MemberManager-macOS.zip
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.9.*'
+          arch: 'win64_msvc2022_64'
+          host: 'windows'
+      - name: Build (Windows)
+        shell: cmd
+        run: |
+          qmake.exe CONFIG+=release
+          nmake
+      - name: Deploy with windeployqt
+        shell: cmd
+        run: |
+          windeployqt.exe release\MemberManager.exe
+          copy release\YourApp.exe release\MemberManager-win.exe
+      - uses: actions/upload-artifact@v3
+        with:
+          name: MemberManager-Windows
+          path: release/MemberManager-win.exe
