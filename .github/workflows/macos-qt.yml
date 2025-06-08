@@ -46,9 +46,9 @@ jobs:
     - name: Package
       run: |
         mkdir upload
-        mv ${{github.workspace}}/build/MemberManager.app upload
-        macdeployqt upload/MemberManager.app
-        tar cf memman-macos-qt.tar.gz -C upload .
+        mv ${{github.workspace}}/build/member_manager.app upload
+        macdeployqt upload/member_manager.app
+        tar cf member-manager-macos-qt.tar.gz -C upload .
 
     - name: Get date and git hash
       id: vars
@@ -60,5 +60,5 @@ jobs:
     - name: Upload executable
       uses: actions/upload-artifact@v4
       with:
-        name: memman-macos-qt-${{ steps.vars.outputs.date }}-${{ steps.vars.outputs.shorthash }}
-        path: memman-macos-qt.tar.gz
+        name: member-manager-macos-qt-${{ steps.vars.outputs.date }}-${{ steps.vars.outputs.shorthash }}
+        path: member-manager-macos-qt.tar.gz

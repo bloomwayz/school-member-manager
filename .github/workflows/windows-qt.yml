@@ -36,8 +36,8 @@ jobs:
     - name: Deploy
       run: |
         mkdir upload
-        move build/Release/MemberManager.exe upload
-        windeployqt --dir upload upload/MemberManager.exe
+        move build/Release/member_manager.exe upload
+        windeployqt --dir upload upload/member_manager.exe
         
     - name: Get date and git hash
       id: vars
@@ -49,5 +49,5 @@ jobs:
     - name: Upload executable
       uses: actions/upload-artifact@v4
       with:
-        name: memman-win64-qt-${{ steps.vars.outputs.date }}-${{ steps.vars.outputs.shorthash }}
+        name: member-manager-win64-qt-${{ steps.vars.outputs.date }}-${{ steps.vars.outputs.shorthash }}
         path: upload
