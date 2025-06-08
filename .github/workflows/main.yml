@@ -4,15 +4,21 @@ on:
   push:
   pull_request:
 
+permissions: read-all
+
 jobs:
   build-macos:
     runs-on: macos-latest
+    
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout tree
+        uses: actions/checkout@v4
+        
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
           version: '6.9.*'
+          
       - name: Build (macOS)
         run: |
           qmake CONFIG+=release
@@ -21,7 +27,7 @@ jobs:
         run: |
           macdeployqt MemberManager.app
           ditto -c -k --sequesterRsrc --keepParent YourApp.app artifacts/MemberManager-macOS.zip
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: MemberManager-macOS
           path: artifacts/MemberManager-macOS.zip
